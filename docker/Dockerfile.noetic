@@ -1,0 +1,55 @@
+FROM osrf/ros:noetic-desktop-full
+
+ARG DEBIAN_FRONTEND=noninteractive
+ARG USERNAME=ros
+ARG USER_UID=1000
+ARG USER_GID=1000
+
+SHELL ["/bin/bash", "-c"]
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    bash-completion \
+    build-essential \
+    ca-certificates \
+    ffmpeg \
+    python3-catkin-tools \
+    python3-matplotlib \
+    python3-numpy \
+    python3-opencv \
+    ros-noetic-cv-bridge \
+    ros-noetic-gazebo-plugins \
+    ros-noetic-gazebo-ros \
+    ros-noetic-husky-description \
+    ros-noetic-husky-gazebo \
+    ros-noetic-message-filters \
+    ros-noetic-robot-state-publisher \
+    ros-noetic-tf \
+    ros-noetic-xacro \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN if ! getent group "${USER_GID}" >/dev/null; then groupadd --gid "${USER_GID}" "${USERNAME}"; fi \
+    && if ! id -u "${USERNAME}" >/dev/null 2>&1; then \
+        useradd --uid "${USER_UID}" --gid "${USER_GID}" --create-home --shell /bin/bash "${USERNAME}"; \
+       fi \
+    && mkdir -p /ws/src
+
+ENV ROS_DISTRO=noetic
+ENV ROS_WS=/ws
+ENV QT_X11_NO_MITSHM=1
+ENV LIBGL_ALWAYS_SOFTWARE=1
+
+COPY . /ws/src/multi_camera_robot_localization
+WORKDIR /ws
+
+RUN source /opt/ros/noetic/setup.bash \
+    && mkdir -p /ws/src/multi_camera_robot_localization/models/tag42/materials/textures \
+    && python3 -c "import cv2; d=cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_APRILTAG_36h11); i=cv2.aruco.drawMarker(d,42,400); i=cv2.copyMakeBorder(i,50,50,50,50,cv2.BORDER_CONSTANT,value=255); assert cv2.imwrite('/ws/src/multi_camera_robot_localization/models/tag42/materials/textures/tag42.png',i)" \
+    && catkin_make \
+    && chown -R "${USER_UID}:${USER_GID}" /ws
+
+COPY docker/entrypoint.sh /ros_entrypoint_multi_camera.sh
+RUN chmod +x /ros_entrypoint_multi_camera.sh
+
+USER ${USERNAME}
+ENTRYPOINT ["/ros_entrypoint_multi_camera.sh"]
+CMD ["bash"]

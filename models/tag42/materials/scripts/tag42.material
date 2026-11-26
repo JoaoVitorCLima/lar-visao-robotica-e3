@@ -1,0 +1,13 @@
+material Tag42
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture tag42.png
+      }
+    }
+  }
+}

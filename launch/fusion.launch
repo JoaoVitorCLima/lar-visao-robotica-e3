@@ -1,0 +1,9 @@
+<launch>
+  <arg name="pose_topics" default="[/camera_1/pose, /camera_2/pose]"/>
+  <arg name="max_pose_age" default="0.5"/>
+
+  <node pkg="multi_camera_robot_localization" type="fuse_poses.py" name="pose_fusion" output="screen">
+    <rosparam param="pose_topics" subst_value="true">$(arg pose_topics)</rosparam>
+    <param name="max_pose_age" value="$(arg max_pose_age)"/>
+  </node>
+</launch>

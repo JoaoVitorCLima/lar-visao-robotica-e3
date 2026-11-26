@@ -1,0 +1,23 @@
+services:
+  multi_camera_robot_localization:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.noetic
+      args:
+        USERNAME: ${USER_NAME:-ros}
+        USER_UID: ${USER_UID:-1000}
+        USER_GID: ${USER_GID:-1000}
+    image: multi-camera-robot-localization:noetic
+    environment:
+      DISPLAY: ${DISPLAY:-}
+      QT_X11_NO_MITSHM: "1"
+      LIBGL_ALWAYS_SOFTWARE: ${LIBGL_ALWAYS_SOFTWARE:-1}
+      GAZEBO_MODEL_PATH: /ws/src/multi_camera_robot_localization/models/lar_lab:/ws/src/multi_camera_robot_localization/models
+      GAZEBO_RESOURCE_PATH: /ws/src/multi_camera_robot_localization
+    volumes:
+      - .:/ws/src/multi_camera_robot_localization:rw
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    working_dir: /ws
+    stdin_open: true
+    tty: true
+    command: bash

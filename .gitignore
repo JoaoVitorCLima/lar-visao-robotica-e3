@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+debug_*.png
+results/*.csv
+results/*.json
+results/*.png
+results/*.mp4
+results/final/
+!results/final_corrected/
+!results/final_corrected/**

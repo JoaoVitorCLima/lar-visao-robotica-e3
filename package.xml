@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>multi_camera_robot_localization</name>
+  <version>0.1.0</version>
+  <description>Localização 3D de robôs por triangulação de um marcador esférico e duas câmeras.</description>
+
+  <maintainer email="joaovitorclima@example.com">João Vitor Carvalho Lima</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>cv_bridge</exec_depend>
+  <exec_depend>gazebo_ros</exec_depend>
+  <exec_depend>husky_description</exec_depend>
+  <exec_depend>husky_gazebo</exec_depend>
+  <exec_depend>message_filters</exec_depend>
+  <exec_depend>nav_msgs</exec_depend>
+  <exec_depend>python3-opencv</exec_depend>
+  <exec_depend>python3-numpy</exec_depend>
+  <exec_depend>rospy</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>tf</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+
+  <test_depend>python3-numpy</test_depend>
+</package>

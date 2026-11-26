@@ -1,0 +1,41 @@
+<launch>
+  <arg name="gui" default="true"/>
+  <arg name="record" default="true"/>
+  <arg name="drive" default="true"/>
+  <arg name="output" default="$(find multi_camera_robot_localization)/results"/>
+
+  <env name="HUSKY_URDF_EXTRAS" value="$(find multi_camera_robot_localization)/husky_urdf_extras/multi_camera.urdf"/>
+  <env name="HUSKY_REALSENSE_ENABLED" value="0"/>
+  <env name="HUSKY_LMS1XX_ENABLED" value="0"/>
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find multi_camera_robot_localization)/worlds/lar_multicamera.world"/>
+    <arg name="gui" value="$(arg gui)"/>
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+  </include>
+
+  <include file="$(find husky_gazebo)/launch/spawn_husky.launch">
+    <arg name="x" value="4.5"/>
+    <arg name="y" value="3.0"/>
+    <arg name="z" value="0.1"/>
+    <arg name="yaw" value="0.0"/>
+  </include>
+
+  <param name="robot_description" command="env HUSKY_URDF_EXTRAS=$(find multi_camera_robot_localization)/husky_urdf_extras/multi_camera.urdf HUSKY_REALSENSE_ENABLED=0 HUSKY_LMS1XX_ENABLED=0 $(find xacro)/xacro $(find husky_description)/urdf/husky.urdf.xacro"/>
+
+  <node pkg="multi_camera_robot_localization" type="triangulate_marker.py" name="marker_triangulation" output="screen">
+    <rosparam param="camera_1/world_camera">[0,-1,0,3.0, -1,0,0,3.0, 0,0,-1,6.0, 0,0,0,1]</rosparam>
+    <rosparam param="camera_2/world_camera">[0,-1,0,6.0, -1,0,0,3.0, 0,0,-1,6.0, 0,0,0,1]</rosparam>
+    <rosparam param="lower_hsv">[35,80,50]</rosparam>
+    <rosparam param="upper_hsv">[95,255,255]</rosparam>
+  </node>
+  <node pkg="multi_camera_robot_localization" type="evaluate_multi_camera.py" name="evaluate_multi_camera" output="screen">
+    <param name="csv" value="$(arg output)/poses.csv"/>
+    <param name="ground_truth_z_offset" value="0.72"/>
+  </node>
+  <node pkg="multi_camera_robot_localization" type="visual_patrol.py" name="visual_patrol" if="$(arg drive)" output="screen"/>
+  <node pkg="multi_camera_robot_localization" type="record_multi_camera.py" name="record_multi_camera" if="$(arg record)" output="screen">
+    <param name="path" value="$(arg output)/multi_camera_demo.mp4"/>
+  </node>
+</launch>

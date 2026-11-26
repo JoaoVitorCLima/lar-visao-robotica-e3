@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <model name="tag42">
+    <static>true</static>
+    <link name="link">
+      <visual name="visual">
+        <geometry><box><size>0.40 0.40 0.01</size></box></geometry>
+        <material>
+          <script>
+            <uri>model://tag42/materials/scripts</uri>
+            <name>Tag42</name>
+          </script>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>
