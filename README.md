@@ -2,7 +2,7 @@
 
 Implementação e validação experimental de uma funcionalidade de Visão Robótica: estimativa da posição de um robô móvel utilizando duas câmeras no Gazebo, ROS Noetic e triangulação geométrica.
 
-Este repositório é uma entrega parcial independente. O projeto completo permanece no repositório [lar-multicamera-robot-localization](https://github.com/JoaoVitorCLima/lar-multicamera-robot-localization).
+Este repositório contém exclusivamente a implementação e a validação experimental da funcionalidade apresentada nesta atividade. Os arquivos necessários para reproduzir o experimento estão incluídos aqui.
 
 ## Funcionalidade apresentada
 
